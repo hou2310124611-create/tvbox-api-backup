@@ -304,7 +304,18 @@ def scan_interfaces():
             print(f"  跳过 {json_file.name}: {e}")
             continue
 
-        lives = data.get("lives", [])
+                if isinstance(data, dict):
+            lives = data.get("lives", [])
+        elif isinstance(data, list):
+            lives = []
+            for item in data:
+                if isinstance(item, dict):
+                    sub_lives = item.get("lives", [])
+                    if isinstance(sub_lives, list):
+                        lives.extend(sub_lives)
+        else:
+            continue
+
         if not isinstance(lives, list):
             continue
 
